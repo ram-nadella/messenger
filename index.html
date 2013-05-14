@@ -289,6 +289,22 @@ Messenger().run
 
         return true
 </code><code executable>
+# Your handlers can also return full message options objects.
+# This means you have to be careful that handlers don't inadvertantly return
+# objects, as they will be interpreted as options.
+Messenger().run
+    errorMessage: 'Done!'
+,
+    url: '/data'
+    error: (xhr) ->
+        if xhr?.status is 404
+            return {
+                type: 'success'
+                message: 'For this request, a 404 is success!'
+            }
+
+        return true
+</code><code executable>
 # Sometimes you only want to show the success message when a
 # retry succeeds, not if a retry wasen't required:
 Messenger().run
@@ -345,7 +361,7 @@ Messenger({'parentLocations': ['.page', 'body']});
 
 # This can be important if you're not using fixed positioning.
 </code><code executable>
-# All the options for globalMessenger and their defaults:
+# All the options for Messenger and their defaults:
 
 {
   'parentLocations': ['body'],
