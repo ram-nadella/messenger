@@ -82,7 +82,7 @@ describe 'the global messenger', () ->
         m.post "c"
         m.post "d"
 
-        expect($('.messenger-message-slot.shown').length).toBe(2)
+        expect($('.messenger-message-slot.messenger-shown').length).toBe(2)
 
 describe 'a message', () ->
     beforeEach beforeEachFunc
@@ -494,7 +494,7 @@ describe 'do ajax', ->
         runs ->
             expect(msg.shown).toBe(false)
 
-    it 'should let message contents be overridden', ->
+    it 'should let message contents be overridden by string messages', ->
         msg = null
 
         runs ->
@@ -510,6 +510,25 @@ describe 'do ajax', ->
         runs ->
             expect(msg.options.message).toBe('YAA')
             expect(msg.shown).toBe(true)
+
+    it 'should let message contents be overridden by message configs', ->
+
+        msg = null
+
+        runs ->
+            msg = gm.do
+                successMessage: 'X'
+            ,
+                url: '/200',
+                error: error,
+                success: -> {
+                  type: 'error'
+                }
+
+        waits 10
+
+        runs ->
+            expect(msg.options.type).toBe('error')
 
     it 'should let message contents be defined', ->
         msg = null

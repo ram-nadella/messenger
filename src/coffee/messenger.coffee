@@ -386,19 +386,19 @@ class _Messenger extends BaseView
         anyShown = false
 
         for rec in @history
-            rec.$slot.removeClass 'first last shown'
+            rec.$slot.removeClass 'messenger-first messenger-last messenger-shown'
 
             if rec.msg.shown and rec.msg.rendered
-                rec.$slot.addClass 'shown'
+                rec.$slot.addClass 'messenger-shown'
                 anyShown = true
 
                 last = rec
                 if willBeFirst
                     willBeFirst = false
-                    rec.$slot.addClass 'first'
+                    rec.$slot.addClass 'messenger-first'
 
         if last?
-            last.$slot.addClass 'last'
+            last.$slot.addClass 'messenger-last'
 
         @$el["#{if anyShown then 'remove' else 'add'}Class"]('messenger-empty')
 
@@ -481,11 +481,11 @@ class ActionMessenger extends _Messenger
                 # Restore ajax
                 $.ajax = _old_ajax
 
-    _getMessage: (returnVal, def) ->
+    _getHandlerResponse: (returnVal, def) ->
         if returnVal == false
             return false
 
-        if returnVal == true or not returnVal? or typeof returnVal != 'string'
+        if returnVal == true or not returnVal?
             return def
 
         return returnVal
@@ -568,7 +568,9 @@ class ActionMessenger extends _Messenger
                     m_opts.errorCount ?= 0
                     m_opts.errorCount += 1
 
-                msgText = @_getMessage(r=old(resp...), m_opts[type + 'Message'])
+                responseOpts = @_getHandlerResponse(old(resp...), m_opts[type + 'Message'])
+                if _.isString responseOpts
+                    responseOpts = {message: responseOpts}
 
                 if type is 'error' and (xhr?.status == 0 or reason == 'abort')
                     # The request was aborted
@@ -580,12 +582,13 @@ class ActionMessenger extends _Messenger
                     do msg.hide
                     return
 
-                msgOpts = $.extend {}, m_opts,
-                    message: msgText
+                defaultOpts =
                     type: type
                     events: events[type] ? {}
 
                     hideOnNavigate: type == 'success'
+
+                msgOpts = $.extend {}, m_opts, defaultOpts, responseOpts
 
                 if typeof msgOpts.retry?.allow is 'number'
                     msgOpts.retry.allow--
@@ -625,7 +628,7 @@ class ActionMessenger extends _Messenger
 
                 msg.update msgOpts
 
-                if msgText
+                if responseOpts
                     # Force the msg box to be rerendered if the page changed:
                     $.globalMessenger()
 
