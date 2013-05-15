@@ -462,7 +462,6 @@ window.Messenger.Events = (function() {
       } else {
         this.$message.removeClass('messenger-will-hide-on-navigate');
       }
-      this.trigger('update', this);
       return this.trigger('update', this);
     };
 
