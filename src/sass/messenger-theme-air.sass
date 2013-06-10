@@ -1,8 +1,6 @@
 @import "compass/utilities/general/clearfix"
 @import "compass/css3"
 
-@import url("http://fonts.googleapis.com/css?family=Raleway:400")
-
 @import "messenger-spinner"
 
 @mixin unselectable
@@ -15,7 +13,6 @@ $spinnerSize: 24px
 
 ul.messenger-theme-air
   +unselectable
-  font-family: "Raleway", sans-serif
 
   &.messenger-empty
     display: none
@@ -28,9 +25,6 @@ ul.messenger-theme-air
     background-color: rgba(255, 255, 255, 0.8)
     position: relative
     margin-bottom: 1em
-    font-size: 13px
-    color: #666
-    font-weight: 500
     padding: 10px 30px 11px 46px
 
     &:hover
@@ -98,11 +92,11 @@ ul.messenger-theme-air
       width: 13px
       z-index: 20
 
-    &.alert-success
+    &.alert-msg-success
       .messenger-message-inner:before
         background-color: rgb(95, 202, 74)
 
-    &.alert-error
+    &.alert-msg-error
       &.messenger-retry-soon
         +ui-spinner(#fff, $spinnerSize, transparent, rgb(221, 106, 69), 1, 10s)
 
@@ -112,7 +106,7 @@ ul.messenger-theme-air
       .messenger-message-inner:before
         background-color: rgb(221, 106, 69)
 
-    &.alert-info
+    &.alert-msg-info
       .messenger-message-inner:before
         background-color: rgb(97, 196, 184)
 
